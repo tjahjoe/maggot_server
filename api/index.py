@@ -3,11 +3,11 @@ from supabase_client import supabase
 
 app = FastAPI()
 
-@app.get("/api")
+@app.get("/")
 def root():
     return {"status": "API running"}
 
-@app.get("/api/data")
+@app.get("/data")
 def get_data():
     try:
         res = supabase.table("maggot_logs").select("*").execute()
