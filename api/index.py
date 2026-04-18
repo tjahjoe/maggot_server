@@ -21,6 +21,9 @@ class MaggotLog(BaseModel):
     p1: float
     p2: float
     p3: float
+
+class FanStatus(BaseModel):
+    id: Optional[int] = 1  
     fan1: bool
     fan2: bool
     fan3: bool
@@ -40,6 +43,27 @@ def get_data():
         return {"status": "success", "data": res.data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/data/latest")
+def get_latest_data():
+    try:
+        res = supabase.table("maggot_logs").select("*").order("created_at", desc=True).limit(1).execute()
+        
+        if not res.data:
+            return {"status": "success", "message": "No data found", "data": None}
+        
+        return {"status": "success", "data": res.data[0]}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/fan")
+def get_fan_status():
+    try:
+        res = supabase.table("fan_status").select("*").execute()
+        return {"status": "success", "data": res.data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/insert")
 def insert_data(log: MaggotLog):
@@ -49,6 +73,18 @@ def insert_data(log: MaggotLog):
         res = supabase.table("maggot_logs").insert(data_to_insert).execute()
         
         return {"status": "data inserted", "data": res.data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.post("/upsert/fan")
+def upsert_fan_status(fan: FanStatus):
+    try:
+        data_to_upsert = fan.dict()
+
+        res = supabase.table("fan_status").upsert(data_to_upsert).execute()
+        
+        return {"status": "success", "message": "Fan status updated/inserted", "data": res.data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
