@@ -63,7 +63,7 @@ def login(user: LoginRequest):
         return {
             "status": "success",
             "message": "Login berhasil",
-            "user": user.username
+            "data": {"username": user.username}
         }
     else:
         raise HTTPException(
