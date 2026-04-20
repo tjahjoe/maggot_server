@@ -18,9 +18,12 @@ class MaggotLog(BaseModel):
     t1: float
     t2: float
     t3: float
-    p1: float
-    p2: float
-    p3: float
+    h1: float
+    h2: float
+    h3: float
+    f1: float
+    f2: float
+    f3: float
 
 class FanStatus(BaseModel):
     id: Optional[int] = 1  
