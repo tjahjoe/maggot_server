@@ -28,6 +28,12 @@ class FanStatus(BaseModel):
     fan2: bool
     fan3: bool
 
+class HeaterStatus(BaseModel):
+    id: Optional[int] = 1  
+    heater1: bool
+    heater2: bool
+    heater3: bool
+
 class LoginRequest(BaseModel):
     username: str
     password: str
@@ -60,8 +66,24 @@ def get_latest_data():
 @app.get("/fan")
 def get_fan_status():
     try:
-        res = supabase.table("fan_status").select("*").execute()
-        return {"status": "success", "data": res.data}
+        res = supabase.table("fan_status").select("*").order("created_at", desc=True).limit(1).execute()
+        
+        if not res.data:
+            return {"status": "success", "message": "No data found", "data": None}
+        
+        return {"status": "success", "data": res.data[0]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/heater")
+def get_heater_status():
+    try:
+        res = supabase.table("heater_status").select("*").order("created_at", desc=True).limit(1).execute()
+        
+        if not res.data:
+            return {"status": "success", "message": "No data found", "data": None}
+        
+        return {"status": "success", "data": res.data[0]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -76,7 +98,6 @@ def insert_data(log: MaggotLog):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-
 @app.post("/upsert/fan")
 def upsert_fan_status(fan: FanStatus):
     try:
@@ -85,6 +106,17 @@ def upsert_fan_status(fan: FanStatus):
         res = supabase.table("fan_status").upsert(data_to_upsert).execute()
         
         return {"status": "success", "message": "Fan status updated/inserted", "data": res.data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/upsert/heater")
+def upsert_heater_status(heater: HeaterStatus):
+    try:
+        data_to_upsert = heater.dict()
+
+        res = supabase.table("heater_status").upsert(data_to_upsert).execute()
+        
+        return {"status": "success", "message": "Heater status updated/inserted", "data": res.data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
