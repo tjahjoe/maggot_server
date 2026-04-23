@@ -45,14 +45,47 @@ class LoginRequest(BaseModel):
 def home():
     return {"status": "API maggot_logs running"}
 
+
 @app.get("/data")
 def get_data():
     try:
-        res = supabase.table("maggot_logs").select("*").order("created_at", desc=True).execute()
-        return {"status": "success", "data": res.data}
+        res = supabase.table("maggot_logs") \
+            .select("*") \
+            .order("created_at", desc=True) \
+            .limit(10) \
+            .execute()
+
+        data = list(reversed(res.data))
+
+        formatted = {
+            "t1": [], "t2": [], "t3": [],
+            "h1": [], "h2": [], "h3": [],
+            "f1": [], "f2": [], "f3": []
+        }
+
+        for item in data:
+            time = item["created_at"][11:16]
+
+            formatted["t1"].append({"x": time, "y": item["t1"]})
+            formatted["t2"].append({"x": time, "y": item["t2"]})
+            formatted["t3"].append({"x": time, "y": item["t3"]})
+
+            formatted["h1"].append({"x": time, "y": item["h1"]})
+            formatted["h2"].append({"x": time, "y": item["h2"]})
+            formatted["h3"].append({"x": time, "y": item["h3"]})
+
+            formatted["f1"].append({"x": time, "y": item["f1"]})
+            formatted["f2"].append({"x": time, "y": item["f2"]})
+            formatted["f3"].append({"x": time, "y": item["f3"]})
+
+        return {
+            "status": "success",
+            "data": formatted
+        }
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
 @app.get("/data/latest")
 def get_latest_data():
     try:
