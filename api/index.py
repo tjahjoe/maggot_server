@@ -35,6 +35,7 @@ class StatusPayload(BaseModel):
     device_id: str = Field(default=DEVICE_ID)
     heater: Literal["on", "off"]
     fan: Literal["on", "off"]
+    mode: Literal["auto", "manual"]
 
 class LoginRequest(BaseModel):
     username: str
