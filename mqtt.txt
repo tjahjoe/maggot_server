@@ -1,0 +1,40 @@
+{
+  "cmd": "setpoint",
+  "value": 35
+}
+
+{
+  "cmd": "heater",
+  "value": "on"
+}
+
+{
+  "cmd": "heater",
+  "value": "off"
+}
+
+{
+  "cmd": "fan",
+  "value": "on"
+}
+
+{
+  "cmd": "fan",
+  "value": "off"
+}
+
+{
+  "cmd": "dim",
+  "value": 4000
+}
+
+{
+    "cmd":"mode",
+    "value":"auto"
+}
+
+{
+    "cmd":"mode",
+    "value":"manual"
+}
+

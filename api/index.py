@@ -38,7 +38,7 @@ class StatusPayload(BaseModel):
     mode: Literal["auto", "manual"]
 
 class LoginRequest(BaseModel):
-    username: str
+    username: str = Field(..., strip_whitespace=True)
     password: str
 
 # =========================================================
