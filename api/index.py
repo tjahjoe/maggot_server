@@ -78,7 +78,7 @@ def get_sensor_history(limit: int = 20, device_id: str = DEVICE_ID):
         }
 
         for item in data:
-            time = item["recorded_at"][11:16]
+            time = item["recorded_at"][11:19]
             formatted["t1"].append({"x": time, "y": item["t1"]})
             formatted["t2"].append({"x": time, "y": item["t2"]})
             formatted["t3"].append({"x": time, "y": item["t3"]})
